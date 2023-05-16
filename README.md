@@ -7,3 +7,7 @@ Run `ng serve`
 - Form Validator
 - Loop using ngFor
 - Lists
+- LocalStorage
+- Styles:
+  - FontAwesome
+  - Animated 

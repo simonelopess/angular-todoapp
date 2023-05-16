@@ -9,26 +9,36 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class AppComponent {
   public todos: Todo[] = [];
-  public title: String = "Minhas Tarefas";
   public form: FormGroup;
+  public mode: String = 'list';
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       title: ['', Validators.compose([
         Validators.minLength(3),
         Validators.maxLength(60),
-        Validators.required
+        Validators.required,
       ])]
     });
+
     this.load();
+  }
+
+  changeMode(mode: String) {
+    this.mode = mode;
   }
 
   add() {
     const title = this.form.controls['title'].value;
     const id = this.todos.length + 1;
-    this.todos.push(new Todo(id, title, false))
+    this.todos.push(new Todo(id, title, false));
     this.save();
     this.clear();
+    this.changeMode('list');
+  }
+
+  clear() {
+    this.form.reset();
   }
 
   remove(todo: Todo) {
@@ -49,10 +59,6 @@ export class AppComponent {
     this.save();
   }
 
-  clear() {
-    this.form.reset();
-  }
-
   save() {
     const data = JSON.stringify(this.todos);
     localStorage.setItem('todos', data);
@@ -60,6 +66,11 @@ export class AppComponent {
 
   load() {
     const data = localStorage.getItem('todos');
-    this.todos = JSON.parse(data || '{}');
+    if (data) {
+      this.todos = JSON.parse(data);
+    } else {
+      this.todos = [];
+    }
   }
 }
+
